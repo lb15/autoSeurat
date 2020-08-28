@@ -182,6 +182,9 @@ scran_analysis <- function(seur_scran,basename,version,res,num_pcs,do_marks){
         print(ElbowPlot(seur_scran))
         dev.off()
         
+        seur_scran <- RunUMAP(seur_scran, dims = 1:num_pcs, verbose = FALSE)
+        seur_scran <- FindNeighbors(seur_scran, dims = 1:num_pcs, verbose = FALSE)
+        
         seur_scran <- run_dr(seur_scran, basename, version, res, num_pcs) 
         
         saveRDS(seur_scran, file = paste(basename,version,"scran_regress.rds",sep="_"))
