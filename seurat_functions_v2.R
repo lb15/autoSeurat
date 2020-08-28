@@ -87,7 +87,7 @@ qc_plotting <- function(seur,basename,version){
 }
 
 get_marks <- function(seur,basename,version,res){
-        seur.markers <- FindAllMarkers(seur, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+        seur.markers <- FindAllMarkers(seur, only.pos = TRUE, assay="RNA", min.pct = 0.25, logfc.threshold = 0.25)
         seur.markers.ordered <- arrange(seur.markers, cluster, desc(avg_logFC))
         
         write.csv(seur.markers.ordered,file=paste(basename,version,"res",res,"markers.csv",sep="_"))
