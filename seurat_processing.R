@@ -105,7 +105,8 @@ if(sum(!is.na(c(MT_filter, nCount_high,nFeature_high))) == 0 & sum(nCount_low,nF
         seur=subset(seur, subset=nFeature_RNA < nFeature_high & nFeature_RNA > nFeature_low & nCount_RNA > nCount_low)
         print("Subsetted on nFeature and nCount_low")
 }
-
+seur_for_sctrans = seur
+                
 sink()
 
 setwd("QCplots/")
@@ -180,11 +181,11 @@ if("all" %in% analyses){
                 print("Finished'Basic_regress_both' analysis")
         }else if(analysis == "sctransform"){
                 print("Starting 'sctransform' analysis")
-                sctrans(data,basename,version,res,num_pcs,do_marks)
+                sctrans(seur_for_sctrans,basename,version,res,num_pcs,do_marks)
                 print("Finished 'sctransform' analysis")
         }else if(analysis == "sctransform_regress"){
                 print("Starting 'sctransform_regress' analysis")
-                sctrans_regress(data,basename,version,res,num_pcs,do_marks)
+                sctrans_regress(seur_for_sctrans,basename,version,res,num_pcs,do_marks)
                 print("Finished 'sctransform_regress' analysis")
         }else if(analysis == "scran"){
                 print("Starting 'scran' analysis")

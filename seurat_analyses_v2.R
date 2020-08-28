@@ -100,8 +100,7 @@ basic_regress_count <- function(seur_regresscnt,basename,version,res,num_pcs,do_
 ##########################################################
 ##sctransform
 ## need to adjust default assay for get_marks -> not SCT assay
-sctrans <- function(counts_data,basename,version,res,num_pcs,do_marks){
-        seur_sctrans <- CreateSeuratObject(counts = data, project = basename, min.cells = 3, min.features = 200)
+sctrans <- function(seur_sctrans,basename,version,res,num_pcs,do_marks){
         
         dir.create("sctransform")
         setwd("sctransform")
@@ -120,8 +119,7 @@ sctrans <- function(counts_data,basename,version,res,num_pcs,do_marks){
 ###############################################################
 ##sctransform with linear regression
 
-sctrans_regress <- function(counts_data,basename,version,res,num_pcs,do_marks){
-        seur_sctrans <- CreateSeuratObject(counts = data, project = basename, min.cells = 3, min.features = 200)
+sctrans_regress <- function(seur_sctrans,basename,version,res,num_pcs,do_marks){
         
         dir.create("sctransform_regress")
         setwd("sctransform_regress")
