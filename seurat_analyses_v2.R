@@ -100,8 +100,7 @@ basic_regress_count <- function(seur_regresscnt,basename,version,res,num_pcs,do_
 ##########################################################
 ##sctransform
 ## need to adjust default assay for get_marks -> not SCT assay
-sctrans <- function(counts_data,basename,version,res,num_pcs,do_marks){
-        seur_sctrans <- CreateSeuratObject(counts = data, project = basename, min.cells = 3, min.features = 200)
+sctrans <- function(seur_sctrans,basename,version,res,num_pcs,do_marks){
         
         dir.create("sctransform")
         setwd("sctransform")
@@ -120,8 +119,7 @@ sctrans <- function(counts_data,basename,version,res,num_pcs,do_marks){
 ###############################################################
 ##sctransform with linear regression
 
-sctrans_regress <- function(counts_data,basename,version,res,num_pcs,do_marks){
-        seur_sctrans <- CreateSeuratObject(counts = data, project = basename, min.cells = 3, min.features = 200)
+sctrans_regress <- function(seur_sctrans,basename,version,res,num_pcs,do_marks){
         
         dir.create("sctransform_regress")
         setwd("sctransform_regress")
@@ -183,9 +181,6 @@ scran_analysis <- function(seur_scran,basename,version,res,num_pcs,do_marks){
         png(paste(basename,version,"scran_regress_PCAelbow.png",sep="_"),height = 800,width=1100)
         print(ElbowPlot(seur_scran))
         dev.off()
-        
-        seur_scran <- RunUMAP(seur_scran, dims = 1:num_pcs, verbose = FALSE)
-        seur_scran <- FindNeighbors(seur_scran, dims = 1:num_pcs, verbose = FALSE)
         
         seur_scran <- run_dr(seur_scran, basename, version, res, num_pcs) 
         
