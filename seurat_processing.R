@@ -106,6 +106,7 @@ if(sum(!is.na(c(MT_filter, nCount_high,nFeature_high))) == 0 & sum(nCount_low,nF
         print("Subsetted on nFeature and nCount_low")
 }
 
+ ## save subsetted original counts for sctransform            
 sink()
 
 setwd("QCplots/")
