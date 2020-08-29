@@ -1,0 +1,23 @@
+### linear regression with  nCount_RNA
+
+basic_regress_count <- function(seur_regresscnt,basename,version,res,num_pcs,do_marks){
+        dir.create("basic_regress_pcmt_ncount")
+        setwd("basic_regress_pcmt_ncount/")
+        
+        all.genes <- rownames(seur_regresscnt)
+        seur_regresscnt <- ScaleData(seur_regresscnt, features = all.genes,vars.to.regress = c("nCount_RNA"))
+        seur_regresscnt <- RunPCA(seur_regresscnt, features = VariableFeatures(object = seur_regresscnt))
+        
+        png(paste(basename,version,"basic_regress_nCount_PCAelbow.png",sep="_"),height = 800,width=1100)
+        print(ElbowPlot(seur_regresscnt))
+        dev.off()
+        
+        seur_regresscnt<- RunUMAP(seur_regresscnt, dims = 1:num_pcs)
+        seur_regresscnt <- FindNeighbors(seur_regresscnt, dims = 1:num_pcs)
+        
+        seur_regresscnt <- run_dr(seur_regresscnt, basename, version, res, num_pcs) 
+        
+        saveRDS(seur_regresscnt, file = paste(basename,version,"regress_nCount.rds",sep="_"))
+   
+        setwd("../")
+}
