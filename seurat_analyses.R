@@ -146,8 +146,9 @@ scran_analysis <- function(seur_scran,basename,version,res,num_pcs,do_marks){
         sce <- SingleCellExperiment(assays = list(counts = as.matrix(x = seur_scran[["RNA"]]@counts))) # read data from Seurat
         clusters = quickCluster(sce, min.size=100)
         sce = computeSumFactors(sce, cluster=clusters)
-        sce = normalize(sce, return_log = FALSE) # without(!) log transform
-        
+        ## update normalize function to logNormCounts from scater
+        #sce = normalize(sce, return_log = FALSE) # without(!) log transform
+        sce= logNormCounts(sce, log=F)
         seur_scran@misc[["seurat_norm_data"]] = as.matrix(x = seur[["RNA"]]@data) # backup Seurat's norm data
         
         
