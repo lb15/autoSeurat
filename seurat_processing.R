@@ -120,8 +120,10 @@ if(is.na(doublets)){
         sink(file=log_file,append=T)
         print("Not removing any doublets")
         sink()
-}else{## need to find example file and fill this out
-}
+}else if(doublets == "Doublet_Finder")
+        doublets <- runDoubletFinder(seur,basename,version,res,num_pcs, dub_perc)
+        
+}else{#need input for list of barcodes to remove}
 
 
 #######################################################################
