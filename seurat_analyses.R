@@ -1,8 +1,32 @@
 ### seurat analyses
+options(echo=TRUE)
+
+### run Doublet Finder
+
+runDoubletFinder <- function(seur,basename,version,res,num_pcs,dub_perc){
+        dir.create("Doublet_Finder")
+        setwd("Doublet_Finder")
+        library("DoubletFinder")
+        
+        
+        ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------
+        sweep.res.list_kidney <- paramSweep_v3(seur, PCs = 1:30, sct = FALSE)
+        sweep.stats_kidney <- summarizeSweep(sweep.res.list_kidney, GT = FALSE)
+        bcmvn_kidney <- find.pK(sweep.stats_kidney)
+
+        ## Homotypic Doublet Proportion Estimate -------------------------------------------------------------------------------------
+        annotations
+        homotypic.prop <- modelHomotypic(annotations)           ## ex: annotations <- seur@meta.data$ClusteringResults
+        nExp_poi <- round(0.076*nrow(seur@meta.data))  ## Assuming 7.5% doublet formation rate - tailor for your dataset
+        nExp_poi.adj <- round(nExp_poi*(1-homotypic.prop))
+
+        ## Run DoubletFinder with varying classification stringencies ----------------------------------------------------------------
+        seur <- doubletFinder_v3(seur, PCs = 1:30, pN = 0.25, pK = 0.09, nExp = nExp_poi, reuse.pANN = FALSE, sct = FALSE)
+        seur <- doubletFinder_v3(seur, PCs = 1:30, pN = 0.25, pK = 0.09, nExp = nExp_poi.adj, reuse.pANN = "pANN_0.25_0.09_913", sct = FALSE)
 
 ###################################################################
 ### basic, no linear regression
-options(echo=TRUE)
+
 basic_noregress <-function(seur,basename,version,res,num_pcs,do_marks){
         
         dir.create("basic_analysis")
