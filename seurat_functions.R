@@ -70,7 +70,7 @@ run_dr <- function(seur, basename, version, res, num_pcs){
 
 umap_plotting <- function(seur,basename,version,res){
         png(paste(basename, version, "res",res,"UMAP.png",sep="_"),height=800,width=1100)
-        print(DimPlot(seur, reduction = "umap")) 
+        print(DimPlot(seur, reduction = "umap"),pt.size=2) 
         dev.off()
 }
 
@@ -80,7 +80,7 @@ qc_plotting <- function(seur,basename,version){
         
         for(gene in genes_plot){
                 png(paste(basename,version, gene,"plot.png",sep="_"),height = 800,width=1100)
-                print(FeaturePlot(seur,features = gene,pt.size = 2))
+                print(FeaturePlot(seur,features = gene,pt.size = 2),pt.size=2)
                 dev.off()
         }
         
