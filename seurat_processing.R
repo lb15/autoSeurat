@@ -6,8 +6,8 @@ library(dplyr)
 
 
 ### load in functions
-source("/wynton/group/reiter/lauren/seurat_scripts/seurat_functions.R")
-source("/wynton/group/reiter/lauren/seurat_scripts/seurat_analyses.R")
+source("/wynton/group/reiter/lauren/autoSeurat/seurat_functions.R")
+source("/wynton/group/reiter/lauren/autoSeurat/seurat_analyses.R")
 
 args=commandArgs(trailingOnly = T)
 
@@ -105,7 +105,6 @@ if(sum(!is.na(c(MT_filter, nCount_high,nFeature_high))) == 0 & sum(nCount_low,nF
         seur=subset(seur, subset=nFeature_RNA < nFeature_high & nFeature_RNA > nFeature_low & nCount_RNA > nCount_low)
         print("Subsetted on nFeature and nCount_low")
 }
-seur_for_sctrans = seur
                 
 sink()
 
@@ -121,15 +120,15 @@ if(is.na(doublets)){
         print("Not removing any doublets")
         sink()
 }else{
+	print(doublets)
 	seur <- add_doublets(seur,doublets)
-	plot_doublets(seur,basename,version)
-	seur <- remove_doublets(seur, basename, version)
-
 	sink(file=log_file, append=T)
-	print("Doublets removed:")
+	print(paste0("Doublets removed:",table(seur$predicted_doublet)))
 	sink()
 
-	create.dir("QCplots_nodubs")
+	seur <- remove_doublets(seur)
+
+	dir.create("QCplots_nodubs")
 	setwd("QCplots_nodubs")
 	qc_plots_stats(seur, basename, version)
 	setwd("../")
@@ -138,6 +137,7 @@ if(is.na(doublets)){
 
 #######################################################################
 print("starting normalization")
+seur_for_sctrans <- seur
 seur <- NormalizeData(seur, normalization.method = "LogNormalize", scale.factor = 10000)
 seur <- FindVariableFeatures(seur, selection.method = "vst", nfeatures = 2000)
 top10 <- head(VariableFeatures(seur), 10)

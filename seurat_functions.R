@@ -47,8 +47,8 @@ qc_plots_stats <- function(seur, basename, version){
 
 add_doublets <- function(seur, doublets){
 	dubs <- read.csv(doublets)
-	if(identical(dubs$cell_barcodes,rownames(seur@meta.data)){
-		seur$doublets <- dubs$predicted_doublet
+	if(identical(dubs$cell_barcodes,rownames(seur@meta.data))){
+		seur$predicted_doublet <- dubs$predicted_doublet
 		return(seur)
 	}else{
 		print("doublet barcodes do not match Seurat object!")
@@ -94,6 +94,10 @@ umap_plotting <- function(seur,basename,version,res){
         png(paste(basename, version, "res",res,"UMAP.png",sep="_"),height=800,width=1100)
         print(DimPlot(seur, reduction = "umap",pt.size=2)) 
         dev.off()
+
+	if("predicted_doublet" %in% colnames(seur@meta.data)){
+		plot_doublets(seur,basename,version)		
+	}
 }
 
 qc_plotting <- function(seur,basename,version){
