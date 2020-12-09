@@ -123,7 +123,7 @@ if(is.na(doublets)){
 }else{
 	seur <- add_doublets(seur,doublets)
 	plot_doublets(seur,basename,version)
-	seur <- remove doublets(seur, basename, version)
+	seur <- remove_doublets(seur, basename, version)
 
 	sink(file=log_file, append=T)
 	print("Doublets removed:")
