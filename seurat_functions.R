@@ -45,6 +45,28 @@ qc_plots_stats <- function(seur, basename, version){
         write.csv(stats_print, file=paste(basename,version,"stats.csv", sep="_"))
 }
 
+add_doublets <- function(seur, doublets){
+	dubs <- read.csv(doublets)
+	if(identical(dubs$cell_barcodes,rownames(seur@meta.data)){
+		seur$doublets <- dubs$predicted_doublet
+		return(seur)
+	}else{
+		print("doublet barcodes do not match Seurat object!")
+	}
+}
+
+plot_doublets <- function(seur, basename, version){
+	png(paste(basename, version,"doublets.png",sep="_"),height=800,width=1100)
+	print(DimPlot(seur, group.by="predicted_doublet",pt.size=1.5))
+	dev.off()
+}
+
+remove_doublets <- function(seur){
+	Idents(seur) <- "predicted_doublet"
+	seur= subset(seur, idents = "False")
+	return(seur)
+}
+
 run_dr <- function(seur, basename, version, res, num_pcs){
         if(is.numeric(res)){
                 seur <- FindClusters(seur, resolution = res)
@@ -70,7 +92,7 @@ run_dr <- function(seur, basename, version, res, num_pcs){
 
 umap_plotting <- function(seur,basename,version,res){
         png(paste(basename, version, "res",res,"UMAP.png",sep="_"),height=800,width=1100)
-        print(DimPlot(seur, reduction = "umap"),pt.size=2) 
+        print(DimPlot(seur, reduction = "umap",pt.size=2)) 
         dev.off()
 }
 

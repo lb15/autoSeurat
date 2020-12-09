@@ -120,7 +120,19 @@ if(is.na(doublets)){
         sink(file=log_file,append=T)
         print("Not removing any doublets")
         sink()
-}else{## need to find example file and fill this out
+}else{
+	seur <- add_doublets(seur,doublets)
+	plot_doublets(seur,basename,version)
+	seur <- remove doublets(seur, basename, version)
+
+	sink(file=log_file, append=T)
+	print("Doublets removed:")
+	sink()
+
+	create.dir("QCplots_nodubs")
+	setwd("QCplots_nodubs")
+	qc_plots_stats(seur, basename, version)
+	setwd("../")
 }
 
 
