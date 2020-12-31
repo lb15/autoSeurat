@@ -73,7 +73,7 @@ run_dr <- function(seur, basename, version, res, num_pcs){
                 umap_plotting(seur, basename,version,res)
                 qc_plotting(seur,basename,version)
                 if(do_marks){
-                        get_marks(seur,basename,version,x)
+                        get_marks(seur,basename,version,res)
                 }
                 return(seur)
         }else{
