@@ -122,6 +122,7 @@ if(is.na(doublets)){
 }else{
 	print(doublets)
 	seur <- add_doublets(seur,doublets)
+	#plot_doublets(seur, basename, version) cannot plot because no dimension reduction yet run
 	sink(file=log_file, append=T)
 	print(paste0("Doublets removed:",table(seur$predicted_doublet)))
 	sink()
