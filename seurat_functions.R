@@ -47,11 +47,25 @@ qc_plots_stats <- function(seur, basename, version){
 
 add_doublets <- function(seur, doublets){
 	dubs <- read.csv(doublets)
-	if(identical(dubs$cell_barcodes,rownames(seur@meta.data))){
-		seur$predicted_doublet <- dubs$predicted_doublet
-		return(seur)
+	if(grepl("freemuxlet",doublets)){
+		if(identical(dubs$BARCODE, rownames(seur@meta.data))){
+			seur$DROPLET.TYPE <- dubs$DROPLET.TYPE
+			seur$SNG.BEST.GUESS <- dubs$SNG.BEST.GUESS
+			print("Exact freemuxlet barcodes provided")
+			return(seur)
+		}else{
+			dubs_order=dubs[match(rownames(seur@meta.data),dubs$BARCODE),]
+			seur$DROPLET.TYPE <- dubs_order$DROPLET.TYPE
+			seur$SNG.BEST.GUESS <- dubs_order$SNG.BEST.GUESS
+			print("Subsetted freemuxlet barcodes to add to seurat object")
+		}
 	}else{
-		print("doublet barcodes do not match Seurat object!")
+		if(identical(dubs$cell_barcodes,rownames(seur@meta.data))){
+			seur$predicted_doublet <- dubs$predicted_doublet
+			return(seur)
+		}else{
+			print("doublet barcodes do not match Seurat object!")
+		}
 	}
 }
 
@@ -61,12 +75,17 @@ plot_doublets <- function(seur, basename, version){
 	dev.off()
 }
 
-remove_doublets <- function(seur){
-	Idents(seur) <- "predicted_doublet"
-	seur= subset(seur, idents = "False")
-	return(seur)
+remove_doublets <- function(seur,doublets){
+	if(grepl("freemuxlet", doublets)){
+		Idents(seur) <- "DROPLET.TYPE"
+		seur = subset(seur, idents = "SNG")
+		return(seur)
+	}else{
+		Idents(seur) <- "predicted_doublet"
+		seur= subset(seur, idents = "False")
+		return(seur)
+	}	
 }
-
 run_dr <- function(seur, basename, version, res, num_pcs){
         if(is.numeric(res)){
                 seur <- FindClusters(seur, resolution = res)

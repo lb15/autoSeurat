@@ -13,7 +13,7 @@ basic_noregress <-function(seur,basename,version,res,num_pcs,do_marks){
         seur <- RunPCA(seur, features = VariableFeatures(object = seur))
         
         png(paste(basename,version,"basic_PCAelbow.png",sep="_"),height = 800,width=1100)
-        print(ElbowPlot(seur))
+        print(ElbowPlot(seur),ndims=40)
         dev.off()
         
         seur <- RunUMAP(seur, dims = 1:num_pcs)
@@ -37,7 +37,7 @@ basic_regress_pcmt <- function(seur_lin_reg,basename,version,res,num_pcs,do_mark
         seur_lin_reg <- RunPCA(seur_lin_reg, features = VariableFeatures(object = seur_lin_reg))
         
         png(paste(basename,version,"basic_regress_PCAelbow.png",sep="_"),height = 800,width=1100)
-        print(ElbowPlot(seur_lin_reg))
+        print(ElbowPlot(seur_lin_reg),ndims=40)
         dev.off()
         
         seur_lin_reg <- RunUMAP(seur_lin_reg, dims = 1:num_pcs)
@@ -60,7 +60,7 @@ basic_regress_both <- function(seur_lin_both,basename,version,res,num_pcs,do_mar
         seur_lin_both <- RunPCA(seur_lin_both, features = VariableFeatures(object = seur_lin_both))
         
         png(paste(basename,version,"basic_regress_both_PCAelbow.png",sep="_"),height = 800,width=1100)
-        print(ElbowPlot(seur_lin_both))
+        print(ElbowPlot(seur_lin_both),ndims=40)
         dev.off()
         
         seur_lin_both <- RunUMAP(seur_lin_both, dims = 1:num_pcs)
@@ -85,7 +85,7 @@ basic_regress_count <- function(seur_regresscnt,basename,version,res,num_pcs,do_
         seur_regresscnt <- RunPCA(seur_regresscnt, features = VariableFeatures(object = seur_regresscnt))
         
         png(paste(basename,version,"basic_regress_nCount_PCAelbow.png",sep="_"),height = 800,width=1100)
-        print(ElbowPlot(seur_regresscnt))
+        print(ElbowPlot(seur_regresscnt),ndims=40)
         dev.off()
         
         seur_regresscnt<- RunUMAP(seur_regresscnt, dims = 1:num_pcs)
@@ -159,7 +159,7 @@ scran_analysis <- function(seur_scran,basename,version,res,num_pcs,do_marks){
         seur_scran <- ScaleData(seur, features=all.genes)
         seur_scran <- RunPCA(seur_scran, features = VariableFeatures(object = seur_scran))
         png(paste(basename,version,"scran_PCAelbow.png",sep="_"),height = 800,width=1100)
-        print(ElbowPlot(seur_scran))
+        print(ElbowPlot(seur_scran),ndims=40)
         dev.off()
         
         seur_scran <- RunUMAP(seur_scran, dims = 1:num_pcs, verbose = FALSE)

@@ -124,10 +124,16 @@ if(is.na(doublets)){
 	seur <- add_doublets(seur,doublets)
 	#plot_doublets(seur, basename, version) cannot plot because no dimension reduction yet run
 	sink(file=log_file, append=T)
-	print(paste0("Doublets removed:",table(seur$predicted_doublet)))
-	sink()
-
-	seur <- remove_doublets(seur)
+	if(grepl("freemuxlet",doublets)){
+		print("Freemuxlet Doublets removed:")
+		print(table(seur$DROPLET.TYPE))
+		sink()
+	}else{
+		print("Doublets removed:")
+		print(table(seur$predicted_doublet))
+		sink()
+	}
+	seur <- remove_doublets(seur,doublets)
 
 	dir.create("QCplots_nodubs")
 	setwd("QCplots_nodubs")
