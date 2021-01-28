@@ -58,6 +58,7 @@ add_doublets <- function(seur, doublets){
 			seur$DROPLET.TYPE <- dubs_order$DROPLET.TYPE
 			seur$SNG.BEST.GUESS <- dubs_order$SNG.BEST.GUESS
 			print("Subsetted freemuxlet barcodes to add to seurat object")
+			return(seur)
 		}
 	}else{
 		if(identical(dubs$cell_barcodes,rownames(seur@meta.data))){
