@@ -112,7 +112,7 @@ run_dr <- function(seur, basename, version, res, num_pcs){
 
 umap_plotting <- function(seur,basename,version,res){
         png(paste(basename, version, "res",res,"UMAP.png",sep="_"),height=800,width=1100)
-        print(DimPlot(seur, reduction = "umap",pt.size=2)) 
+        print(DimPlot(seur, reduction = "umap",pt.size=2),label=T) 
         dev.off()
 	
 	# not useful since doublets already removed by this point
