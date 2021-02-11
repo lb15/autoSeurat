@@ -16,6 +16,14 @@ version=args[2]
 parameters_file = args[3]
 do_marks = args[4]
 
+## set default to FALSE if no input
+print("do_marks:")
+print(do_marks)
+
+if(is.na(do_marks)){
+	do_marks = FALSE
+}
+
 setwd(basename)
 
 ### load in parameter arguments
@@ -154,6 +162,15 @@ plot2_vg <- LabelPoints(plot = plot1_vg, points = top10, repel = TRUE)
 png(paste0("QCplots/",basename,"_",version,"_variablegenes.png"),height = 800,width=1100)
 CombinePlots(plots = list(plot1_vg, plot2_vg))
 dev.off()
+
+
+if(grepl("agg", basename, fixed=T)){
+	sink(log_file, append=T)
+	print("Adding replicate meta.data. Assuming 2 replicates with '-1' and '-2' labels.")
+	sink()
+	
+	seur <- add_replicate_info(seur)
+}
 
 ######################################################################
 ## Seurat analyses

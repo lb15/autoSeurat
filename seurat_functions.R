@@ -114,10 +114,26 @@ umap_plotting <- function(seur,basename,version,res){
         png(paste(basename, version, "res",res,"UMAP.png",sep="_"),height=800,width=1100)
         print(DimPlot(seur, reduction = "umap",pt.size=2)) 
         dev.off()
+	
+	# not useful since doublets already removed by this point
+	#if("predicted_doublet" %in% colnames(seur@meta.data)){
+	#	plot_doublets(seur,basename,version)		
+	#}
 
-	if("predicted_doublet" %in% colnames(seur@meta.data)){
-		plot_doublets(seur,basename,version)		
+	if(grepl("agg",basename,fixed=T)){
+	
+		png(paste(basename, version, "replicate.png",sep="_"),height=800,width=1100)
+		print(DimPlot(seur, reduction="umap",group.by="replicate",pt.size=1))
+		dev.off()
 	}
+}
+
+
+add_replicate_info <- function(seur){
+	seur$replicate <- NA
+	seur$replicate[grep("-1",rownames(seur@meta.data))] <- "R1"
+	seur$replicate[grep("-2",rownames(seur@meta.data))] <- "R2"
+	return(seur)
 }
 
 qc_plotting <- function(seur,basename,version){
