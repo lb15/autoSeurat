@@ -36,11 +36,11 @@ qc_plots_stats <- function(seur, basename, version){
         mean_nFeature = mean(seur$nFeature_RNA)
         median_nFeature= mean(seur$nFeature_RNA)
         sd_nFeature=sd(seur$nFeature_RNA)
-        
-        all_stats = list(mean_percent.mt, median_percent.mt, sd_percent.mt, mean_nCount, median_nCount, sd_nCount, mean_nFeature, median_nFeature, sd_nFeature)
+       	num_cells= length(colnames(seur[["RNA"]]@data)) 
+        all_stats = list(mean_percent.mt, median_percent.mt, sd_percent.mt, mean_nCount, median_nCount, sd_nCount, mean_nFeature, median_nFeature, sd_nFeature,num_cells)
         
         statsdf = as.data.frame(do.call(rbind, all_stats))
-        stats_print = cbind(statsdf, "Stat"=c("Mean_Percent.mt","Median_Percent.mt", "Standard_deviation_Percent.mt","Mean_nCount","Median_nCount", "Standard_deviation_nCount","Mean_nFeature","Median_nFeature", "Standard_deviation_nFeature"))
+        stats_print = cbind(statsdf, "Stat"=c("Mean_Percent.mt","Median_Percent.mt", "Standard_deviation_Percent.mt","Mean_nCount","Median_nCount", "Standard_deviation_nCount","Mean_nFeature","Median_nFeature", "Standard_deviation_nFeature","Number of Cells"))
         
         write.csv(stats_print, file=paste(basename,version,"stats.csv", sep="_"))
 }
