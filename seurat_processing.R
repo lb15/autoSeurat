@@ -38,8 +38,12 @@ nFeature_high = parameters$nFeature_high
 nFeature_low = parameters$nFeature_low
 num_pcs = parameters$PCs
 res=parameters$resolution
-doublets = parameters$path_to_doublet_csv 
+cells_remove = parameters$path_to_doublet_csv 
 analyses=parameters$analyses
+doublets=cells_remove
+
+### adding this in to redirect to file in home directory
+#cells_remove=paste0("/wynton/group/reiter/lauren/",basename,"/",cells_remove)
 
 ## read in data
 data_dir ="filtered_feature_bc_matrix/"
@@ -122,33 +126,37 @@ setwd("../")
 
 #######################################################################
 ## taking care of doublets (everyday!)
-
-if(is.na(doublets)){
+## cells file is in basename directory
+print(cells_remove)
+if(is.na(cells_remove)){
         sink(file=log_file,append=T)
-        print("Not removing any doublets")
+        print("Not removing any cells")
         sink()
 }else{
-	print(doublets)
+	#print(cells_remove)
+	sink(file=log_file, append=T)
+	print(paste0("Cell subsetting list: ", cells_remove))
+	print("Starting cells:")
+	print(length(rownames(seur@meta.data)))
+	#seur <- remove_cells(seur, cells_remove)
 	seur <- add_doublets(seur,doublets)
 	#plot_doublets(seur, basename, version) cannot plot because no dimension reduction yet run
-	sink(file=log_file, append=T)
-	if(grepl("freemuxlet",doublets)){
-		print("Freemuxlet Doublets removed:")
-		print(table(seur$DROPLET.TYPE))
-		sink()
-	}else{
-		print("Doublets removed:")
-		print(table(seur$predicted_doublet))
-		sink()
-	}
-	seur <- remove_doublets(seur,doublets)
+	#sink(file=log_file, append=T)
+	#if(grepl("freemuxlet",doublets)){
+	#	print("Freemuxlet Doublets removed:")
+	#	print(table(seur$DROPLET.TYPE))
+	#	sink()
+	#}else{
+	print("Ending cells:")
+	print(length(rownames(seur@meta.data)))
+	sink()
 
-	dir.create("QCplots_nodubs")
-	setwd("QCplots_nodubs")
+	seur <- remove_doublets(seur,doublets)
+	dir.create("QCplots_removedcells")
+	setwd("QCplots_removedcells")
 	qc_plots_stats(seur, basename, version)
 	setwd("../")
 }
-
 
 #######################################################################
 print("starting normalization")

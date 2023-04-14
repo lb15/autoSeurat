@@ -65,7 +65,10 @@ add_doublets <- function(seur, doublets){
 			seur$predicted_doublet <- dubs$predicted_doublet
 			return(seur)
 		}else{
-			print("doublet barcodes do not match Seurat object!")
+			 dubs_order=dubs[match(rownames(seur@meta.data),dubs$cell_barcodes),]
+			seur$predicted_doublet <- dubs_order$predicted_doublet
+			print("Subsetted scrublet barcodes to add to seurat object")
+			return(seur)
 		}
 	}
 }
@@ -74,6 +77,24 @@ plot_doublets <- function(seur, basename, version){
 	png(paste(basename, version,"doublets.png",sep="_"),height=800,width=1100)
 	print(DimPlot(seur, group.by="predicted_doublet",pt.size=1.5))
 	dev.off()
+}
+
+remove_cells <- function(seur, cells_remove){
+	if(grepl("remove", cells_remove)){
+		sink(file=log_file,append=T)
+		print("Removing cells from seurat object")
+		sink()
+		cell_list = read.table(cells_remove)
+		sub = subset(seur, cells= cell_list$x,invert=T)
+		return(sub)
+	}else{
+		sink(file=log_file,append=T)
+                print("Keeping cells only in file in Seurat object")
+                sink()
+		cell_list=read.table(cells_remove)
+		sub=subset(seur, cells=cell_list$x)
+		return(sub)
+	}
 }
 
 remove_doublets <- function(seur,doublets){
@@ -150,7 +171,7 @@ qc_plotting <- function(seur,basename,version){
 
 get_marks <- function(seur,basename,version,res){
         seur.markers <- FindAllMarkers(seur, only.pos = TRUE, assay="RNA", min.pct = 0.25, logfc.threshold = 0.25)
-        seur.markers.ordered <- arrange(seur.markers, cluster, desc(avg_logFC))
+        seur.markers.ordered <- arrange(seur.markers, cluster, desc(avg_log2FC))
         
         write.csv(seur.markers.ordered,file=paste(basename,version,"res",res,"markers.csv",sep="_"))
 }
