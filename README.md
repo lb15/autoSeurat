@@ -2,7 +2,7 @@
 
 Scripts for processing cellranger output through Seurat.
 
-Submission script is written for UCSF's Wynton SGE submission system.
+Submission script is written for UCSF's Wynton HPC submission system.
 
 Requires cellranger output, including the .mtx cell x gene matrix, the .tsv  barcode list, and the .tsv gene list.
 Parameters for seurat processing are specified in a parameters.csv file.
